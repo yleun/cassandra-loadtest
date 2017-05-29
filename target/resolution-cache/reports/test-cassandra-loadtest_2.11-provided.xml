@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="test"
+		module="cassandra-loadtest_2.11"
+		revision="0.0.80"
+		conf="provided"
+		confs="universal, universal-docs, universal-src, compile, runtime, test, provided, optional, windows, docker, linux, rpm, debian, it, compile-internal, runtime-internal, test-internal, it-internal, plugin, sources, docs, pom, scala-tool, scoveragePlugin, newrelic-agent"
+		date="20170529184504"/>
+	<dependencies>
+	</dependencies>
+</ivy-report>

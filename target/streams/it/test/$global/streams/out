@@ -1,0 +1,21 @@
+[0m[[0mdebug[0m] [0mjavaOptions: List(-Dconfig.file=conf/test.application.conf)[0m
+[0m[[0mdebug[0m] [0mForking tests - parallelism = false[0m
+[0m[[0mdebug[0m] [0mCreate a single-thread test executor[0m
+[0m[[0mdebug[0m] [0mRunner for org.scalatest.tools.Framework produced 1 initial tasks for 1 tests.[0m
+[0m[[0mdebug[0m] [0m  Running TaskDef(ControllerSpec, sbt.ForkMain$SubclassFingerscan@1ce04fd5, false, [SuiteSelector])[0m
+[0m[[0minfo[0m] [0m[32mControllerSpec:[0m[0m
+[0m[[0minfo[0m] [0m[32mGroupController /groups/{groupId}/ids POST[0m[0m
+[0m[[0minfo[0m] [0m[32m- should return a ok when new group id is posted[0m[0m
+[0m[[0minfo[0m] [0m[32m- should return a group id when get end point with the groupId UID is hit[0m[0m
+[0m[[0mdebug[0m] [0m    Produced 0 nested tasks and 2 events.[0m
+[0m[[0mdebug[0m] [0mRunner for com.novocode.junit.JUnitFramework produced 0 initial tasks for 0 tests.[0m
+[0m[[0minfo[0m] [0mScalaTest[0m
+[0m[[0minfo[0m] [0m[36mRun completed in 6 seconds, 79 milliseconds.[0m[0m
+[0m[[0minfo[0m] [0m[36mTotal number of tests run: 2[0m[0m
+[0m[[0minfo[0m] [0m[36mSuites: completed 1, aborted 0[0m[0m
+[0m[[0minfo[0m] [0m[36mTests: succeeded 2, failed 0, canceled 0, ignored 0, pending 0[0m[0m
+[0m[[0minfo[0m] [0m[32mAll tests passed.[0m[0m
+[0m[[0mdebug[0m] [0mSummary for JUnit not available.[0m
+[0m[[0minfo[0m] [0mPassed: Total 2, Failed 0, Errors 0, Passed 2[0m
+[0m[[0mdebug[0m] [0mPassed tests:[0m
+[0m[[0mdebug[0m] [0m	ControllerSpec[0m

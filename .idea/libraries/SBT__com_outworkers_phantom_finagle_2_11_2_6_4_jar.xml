@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: com.outworkers:phantom-finagle_2.11:2.6.4:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.outworkers/phantom-finagle_2.11/jars/phantom-finagle_2.11-2.6.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.outworkers/phantom-finagle_2.11/srcs/phantom-finagle_2.11-2.6.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,26 @@
+language: scala
+jdk: oraclejdk8
+scala:
+- 2.11.8
+sudo: required
+cache:
+  directories:
+  - "$HOME/.ivy2/cache"
+  - "$HOME/.sbt/boot/"
+install:
+- ". $HOME/.nvm/nvm.sh"
+- nvm install stable
+- nvm use stable
+script:
+- set -e
+- sbt ++$TRAVIS_SCALA_VERSION test it:test
+services:
+- docker
+after_success:
+- scripts/push.sh
+env:
+  global:
+  - AWS_DEFAULT_REGION=us-east-1
+  - AWS_REGION=us-east-1
+  - secure: eoa1vi2HxhbMiSYDByAtdLXi88bU0/35v7kLKwKLrJXvuJoGG/yuZf/T1v4L0uopBxJfhX4MMaWPr0ek6bJjkk7kDr3RsPhI7iamlTRedWJKy2psGj0Fj+Q4eIebPxh5kNlvWCNkHEybAbhQTmm8xkWhftdYsjYyBDuhUIjfME72TmeY40x1NQOPzF6PGxU66cCKISKpZ3ZaGo/ZUksvKAwmuWnawkikBSQoKcP63uUDGEp87hEv1bf2AYxdfRKIMwTCkUnJzBXKeIrXdfrywcgkzF6jlMuC07uFJNE8/lIlXEfUttLp6NXf3ZeKd+AvBpWKuragj2YCb2xrTltJybRgWAcFGaGKciI5/80ZdYLBflLGcm+m5qMbQY18pSRs1loPo7fyIthSr8mXVvvNstS3hBLwaibqHahQe+7PZNzJTKDDZBTneFQX2HdP4kmuMohwEWtzLf40SvZdTBkxWOvvfFKAGmkonFAki0moZaUUQ3d23fWXZ9OupW6zMmfV2x8qi71fICAjkNvbe5JfUluoAKPv3iLJA5BvXGUwj3eDM0+2TKidhcYtgsiIwfIz5k9du36Mb+nofVvDi2pDh2zEuMkKwJs5KHqpw5fncA6yDvIJuRYgc+GLiFkicMzi45kvtJ41r4bt+I+UIu1syQD6Yp32m4X3K8LSiJxyGqQ= #AWS Prod
+  - secure: HICQLCM4mp+/oFCjN6XptO6Eckioqlbp8fOHQ/+6WUUD7vUl3GtmvPHTh1YTXMG9d66QrdcRjamugUzlGNITvg65gUW8+mgtjsCjFikf5o7zliFiqI4BrsH9LXbTdCfdVFSHVIxVT6bMxuzvMrQXHrNVxTYDrIztfx1KZhYST2mwIGiAVkwZgz+khM6E0txNZCGjLx6D3AkO2j/oBomhdHyWnM83UV2wXLeFJvN9wpmHMXPKXPH91apO2rPbfRocrVz2HNt02l4WhiEyr+KB1jqimObarvJKOhymV5Hq0aTOJ2Ah/Uj6EfgayTTLp0BK56VteB7wpkHC1e8kooMDkxdNBq/caUv8n/0jKN4n+udkuXWH07cJ7a2Ffia6NB6POv1AUJfHVFzIJpRBCkxwSvGw9kEqczYF8wBrDZFEtNP6/dRAqOX93nTYOn9UXA/d9+YS5Rj5twtEugcni2ZbfWl85YFJxC9l4v0ZlELjDZC8/UxG9NuiDF846omk86veaALWGK7QTBTIE34Q5Fx2KhCnFy7NOAQ5Qkm9hKcYrIibqBiZ/ogQvZTTOJyJUIRDZCL0jqw7NlCLGf45Xjs5DO6gXXifMiPnXHxmG3WvETxQWySIse4xhlQSBIVn9yQMOk7pIUsZzH6jAv4qBOZQ6tjMf4cmmSPPhcty1v6hoss= #AWS Travis Deployer

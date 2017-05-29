@@ -1,0 +1,14 @@
+
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /groups/:groupId/ids                 controllers.GroupController.getGroup(groupId: java.util.UUID)
+
+POST    /groups/:groupId/ids                 controllers.GroupController.saveGroup(groupId: java.util.UUID)
+
+GET     /groups2/:groupId/ids                 controllers.GroupController.getGroup2(groupId: java.util.UUID)
+
+POST    /groups2/:groupId/ids                 controllers.GroupController.saveGroup2(groupId: java.util.UUID)
