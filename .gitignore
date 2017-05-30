@@ -1,0 +1,32 @@
+*.class
+*.log
+.project
+.sonar
+# IDEA
+.idea/
+
+# sbt specific
+project/.sbtserver
+project/.sbtserver.lock
+.sbtserver
+.cache
+.history
+.lib/
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+project/target
+project/project/target
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+
+# activator
+RUNNING_PID
+play-scala
+
+# OSX specific
+.DS_Store
