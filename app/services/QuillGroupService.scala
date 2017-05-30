@@ -5,8 +5,8 @@ import javax.inject._
 
 import com.outworkers.phantom.dsl.UUID
 import com.typesafe.config.ConfigFactory
-import db.phantom.model.{GroupId}
-import db.phantom.repository.GroupIdRepository
+import db.quill.model.{GroupId}
+import db.quill.repository.GroupIdRepository
 
 import scala.concurrent.{ExecutionContext, Future}
 

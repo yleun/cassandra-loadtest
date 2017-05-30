@@ -40,6 +40,7 @@ lazy val root = (project in file("."))
       "com.outworkers"   %% "phantom-connectors"            % phantomVersion,
       "com.outworkers"   %% "phantom-dsl"                   % phantomVersion,
       "com.outworkers"   %% "phantom-thrift"                % phantomVersion,
+      "io.getquill" %% "quill-cassandra" % "1.2.1",
       "com.typesafe" % "config" % "1.3.1",
       "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % "test,it",
       "org.mockito" % "mockito-core" % "2.7.22" % "test",

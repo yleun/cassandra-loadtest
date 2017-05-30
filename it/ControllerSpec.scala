@@ -1,4 +1,5 @@
 import java.util.UUID
+import java.util.Date
 
 import com.typesafe.config.ConfigFactory
 import db.phantom.model.GroupId
@@ -19,6 +20,7 @@ class ControllerSpec extends PlaySpec with OneAppPerSuite {
   val groupId = UUID.randomUUID
   val id = UUID.randomUUID
   val createTs: DateTime = new DateTime
+  val createDate: Date = new Date
 
   "GroupController /groups/{groupId}/ids POST" should {
     "return a ok when new group id is posted" in {
@@ -94,6 +96,53 @@ class ControllerSpec extends PlaySpec with OneAppPerSuite {
       val content = (contentAsJson(getResponse) \ "ids").get
       content mustBe JsArray()
     }*/
+
+  }
+
+
+  "GroupController /groups2/{groupId}/ids POST" should {
+    "return a ok when new group id is posted" in {
+
+      val request = FakeRequest(POST, "/groups2/" + groupId + "/ids")
+        .withHeaders("Host" -> "localhost")
+        .withBody(
+          Json.obj(
+            "groupId" -> groupId,
+            "id" -> id,
+            "createTs" -> Util.toString(createDate)
+          )
+        )
+
+      println("DATE USED: " + Util.toString(createDate))
+
+      val response = route(app, request).get
+
+      status(response) mustBe CREATED
+      contentAsJson(response) mustBe Json.obj(
+        "status" -> "created"
+      )
+
+    }
+
+    "return a group id when get end point with the groupId UID is hit" in {
+      val request = FakeRequest(GET, "/groups2/" + groupId + "/ids")
+        .withHeaders("Host" -> "localhost", "Accept-Language" -> "en")
+      println("DATE GOT BACK: " + Util.toString(createDate))
+      val response = route(app, request).get
+      status(response) mustBe OK
+      contentAsJson(response) mustBe Json.obj(
+        "groupId" -> groupId,
+        "ids" -> Json.arr(
+          Json.obj(
+            "groupId" -> groupId,
+            "id" -> id,
+            "createTs" -> Util.toString(createDate)
+          )
+        )
+      )
+    }
+
+
   }
 
 

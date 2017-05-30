@@ -8,7 +8,7 @@ import javax.inject._
 
 import com.typesafe.config.ConfigFactory
 import db.phantom.model.GroupId
-import dto.{ErrorCode, ErrorResponse, GroupResponse}
+import dto.{ErrorCode, ErrorResponse, GroupResponse, QuillGroupResponse}
 import play.api.i18n.Lang
 
 import scala.concurrent.Future
@@ -69,7 +69,7 @@ class GroupController @Inject()(actorSystem: ActorSystem, service: GroupService,
     service2.listGroups(groupId)
       .map {
         case Right(a) =>
-          Ok(GroupResponse(groupId, a).toJson)
+          Ok(QuillGroupResponse(groupId, a).toJson)
         case Left(e) =>
           ServiceUnavailable(
             ErrorResponse(
@@ -81,7 +81,7 @@ class GroupController @Inject()(actorSystem: ActorSystem, service: GroupService,
   }
 
   def saveGroup2(groupId: UUID) = Action.async(parse.json) { request =>
-    request.body.validate[GroupId].fold({ errors =>
+    request.body.validate[db.quill.model.GroupId].fold({ errors =>
       Future.successful(
         BadRequest(
           Json.obj(
@@ -91,9 +91,9 @@ class GroupController @Inject()(actorSystem: ActorSystem, service: GroupService,
           )
         )
       )
-    }, { groupIdObj =>
+    }, { quillGroupIdObj =>
       service2
-        .insertGroup(groupIdObj)
+        .insertGroup(quillGroupIdObj)
         .map {
           case Right(_) =>
             Created(Json.obj("status" -> "created"))

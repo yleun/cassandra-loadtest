@@ -1,0 +1,10 @@
+{
+  "simulation": "GroupByGroupId",
+  "simulationId": "groupbygroupid",
+  "start": 1496110540024,
+  "description": "",
+  "scenarios": ["Get Group By Group Id"],
+  "assertions": [
+
+  ]
+}
