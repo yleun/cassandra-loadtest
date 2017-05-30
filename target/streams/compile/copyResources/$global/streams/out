@@ -1,8 +1,0 @@
-[0m[[0mdebug[0m] [0mCopy resource mappings: [0m
-[0m[[0mdebug[0m] [0m	(/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/conf/application.conf,/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/target/scala-2.11/classes/application.conf)[0m
-[0m[[0mdebug[0m] [0m	(/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/conf/cassandrascripts,/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/target/scala-2.11/classes/cassandrascripts)[0m
-[0m[[0mdebug[0m] [0m	(/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/conf/logback.xml,/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/target/scala-2.11/classes/logback.xml)[0m
-[0m[[0mdebug[0m] [0m	(/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/conf/messages,/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/target/scala-2.11/classes/messages)[0m
-[0m[[0mdebug[0m] [0m	(/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/conf/routes,/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/target/scala-2.11/classes/routes)[0m
-[0m[[0mdebug[0m] [0m	(/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/conf/test.application.conf,/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/target/scala-2.11/classes/test.application.conf)[0m
-[0m[[0mdebug[0m] [0m	(/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/conf/cassandrascripts/file.cql,/Users/yuenpingleung/yp/projects/work/scala/cassandra-loadtest/target/scala-2.11/classes/cassandrascripts/file.cql)[0m
