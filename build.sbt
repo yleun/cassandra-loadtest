@@ -5,7 +5,8 @@ import ReleaseTransformations._
 
 import scala.util.Try
 
-val phantomVersion = "2.6.4"
+val phantomVersion = "2.11.0"
+val util = "0.36.0"
 
 addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3")
 
@@ -22,7 +23,6 @@ lazy val root = (project in file("."))
     name := "cassandra-loadtest",
     organization := "test",
     scalaVersion := "2.11.8",
-
     buildInfoPackage := "test",
     buildInfoKeys := Seq[BuildInfoKey](
       BuildInfoKey.action("buildDate")(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date())),
@@ -33,19 +33,19 @@ lazy val root = (project in file("."))
       BuildInfoKey.action("sbtVersion")(sbtVersion.value),
       BuildInfoKey.action("dependencies")(Seq("cassandra"))
     ),
-
+    fork in run := true,
+    javaOptions in run ++= Seq(
+      "-XX:MetaspaceSize=512m",
+      "-XX:MaxMetaspaceSize=1g"
+    ),
     libraryDependencies ++=Seq(
-      "joda-time" % "joda-time" % "2.9.3",
-      "org.joda" % "joda-convert" % "1.8",
-      "com.outworkers"   %% "phantom-connectors"            % phantomVersion,
-      "com.outworkers"   %% "phantom-dsl"                   % phantomVersion,
-      "com.outworkers"   %% "phantom-thrift"                % phantomVersion,
+      "com.outworkers" %% "phantom-dsl"                   % phantomVersion,
+      "com.outworkers" %% "util-samplers"                 % util % Test,
       "io.getquill" %% "quill-cassandra" % "1.2.1",
       "com.typesafe" % "config" % "1.3.1",
       "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % "test,it",
-      "org.mockito" % "mockito-core" % "2.7.22" % "test",
-      "org.scalatest" % "scalatest_2.11" % "2.2.6" % "test" ,
-      "io.netty" % "netty" % "3.10.6.Final"
+      "org.mockito" % "mockito-core" % "2.7.22" % Test,
+      "org.scalatest" %% "scalatest" % "2.2.6" % Test
     ),
 
     TwirlKeys.templateFormats += ("yaml" -> "play.twirl.api.TxtFormat"),

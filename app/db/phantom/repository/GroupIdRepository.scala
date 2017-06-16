@@ -1,12 +1,13 @@
-package db.phantom.repository
-
-import com.outworkers.phantom.dsl._
-import com.outworkers.phantom.connectors.CassandraConnection
-import db.phantom.connector.Connector
-import db.phantom.model._
-import com.typesafe.config.ConfigFactory
+package db.phantom
+package repository
 
 import java.util.UUID
+
+import com.outworkers.phantom.connectors.CassandraConnection
+import com.outworkers.phantom.dsl._
+import com.typesafe.config.ConfigFactory
+import db.model._
+import db.phantom.connector.Connector
 
 import scala.concurrent.Future
 
@@ -24,11 +25,21 @@ trait GroupIdRepo {
 
 }
 
-class GroupIdRepository extends DatabaseProvider[GroupIdDB] with GroupIdRepo {
+object GroupDatabase {
+
   private val config = ConfigFactory.load()
   private val useSSL: Boolean = config.getBoolean("db.cassandra.ssl")
 
-  def database = new GroupIdDB(Connector.connector(useSSL))
+  val db = new GroupIdDB({
+    Console.println("Initialising a database")
+    Connector.connector(useSSL)
+  })
+}
+
+
+class GroupIdRepository extends DatabaseProvider[GroupIdDB] with GroupIdRepo {
+
+  val database = GroupDatabase.db
 
   /**
     *
@@ -46,23 +57,20 @@ class GroupIdRepository extends DatabaseProvider[GroupIdDB] with GroupIdRepo {
       .groupIds
       .findById(groupId, id)
 
+  val saveQuery =
+    database.groupIds.insert
+      .p_value(_.groupId, ?)
+      .p_value(_.id, ?)
+      .p_value(_.createTs, ?)
+      .prepare()
+
   /**
     *
     * @param ae
     * @return
     */
   def saveEntry(ae: GroupId): Future[Boolean] = {
-    database
-      .groupIds
-      .findById(ae.groupId, ae.id)
-      .flatMap {
-        case Some(x) => {
-          save(ae, false)
-        }
-        case None => {
-          save(ae, true)
-        }
-      }
+    save(ae, isNew = true)
   }
 
   /**
@@ -72,10 +80,7 @@ class GroupIdRepository extends DatabaseProvider[GroupIdDB] with GroupIdRepo {
     * @return
     */
   def save(gi: GroupId, isNew: Boolean): Future[Boolean] = {
-    database
-      .groupIds
-      .save(gi)
-      .flatMap (rs => database.groupIds.save(gi).map(_.wasApplied))
+   saveQuery.bind(gi).future() map (_ => true)
   }
 
   /**
@@ -87,15 +92,8 @@ class GroupIdRepository extends DatabaseProvider[GroupIdDB] with GroupIdRepo {
     * @return
     */
   def delete(groupId: UUID, id: UUID): Future[Boolean] = {
-    database
-        .groupIds
-        .deleteById(groupId, id)
-        .flatMap   {
-          case rs => database.
-                      groupIds.
-                      deleteById(groupId, id).map(_.wasApplied())
-        }
+    for {
+      del2 <- database.groupIds.deleteById(groupId, id).map(_.wasApplied())
+    } yield del2
   }
-
-
 }

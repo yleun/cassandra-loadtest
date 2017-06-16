@@ -3,9 +3,8 @@ package services
 import scala.language.postfixOps
 import javax.inject._
 
-import com.outworkers.phantom.dsl.UUID
-import com.typesafe.config.ConfigFactory
-import db.phantom.model.{GroupId}
+import java.util.UUID
+import db.model.GroupId
 import db.phantom.repository.GroupIdRepository
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -16,8 +15,6 @@ case class RepositoryFailure(ex: Throwable) extends ServiceError
 case object GroupIdNotFound extends ServiceError
 
 case class GroupService @Inject()(groupRepo: GroupIdRepository)(implicit val ec: ExecutionContext) {
-  private val config = ConfigFactory.load()
-
   private def toSuccess[A](a: A): Either[ServiceError, A] = Right(a)
 
   private def toRepoFailure[A]: PartialFunction[Throwable, Either[ServiceError, A]] = {
@@ -52,12 +49,11 @@ case class GroupService @Inject()(groupRepo: GroupIdRepository)(implicit val ec:
   def deleteGroup(groupId: UUID, id: UUID): Future[Either[ServiceError, Boolean]] =
     getId(groupId, id)
       .flatMap {
-        case Right(gi) => {
+        case Right(gi) =>
           groupRepo
             .delete(groupId, id)
             .map(toSuccess)
             .recover(toRepoFailure)
-        }
         case Left(err) => Future(Left(err))
       }
   

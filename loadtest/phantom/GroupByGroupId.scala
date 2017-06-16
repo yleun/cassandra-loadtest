@@ -6,7 +6,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.language.postfixOps
 
-class GroupByGroupId extends Simulation {
+class GroupByGroupIdPhantom extends Simulation {
 
   object GetGroups {
 

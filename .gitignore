@@ -30,3 +30,7 @@ play-scala
 
 # OSX specific
 .DS_Store
+
+loadtest/phantom/results
+loadtest/quill/results
+logs

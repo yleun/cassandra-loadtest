@@ -5,14 +5,6 @@ import play.api.libs.json._
 
 case class ErrorResponse(code: ErrorCode, errors: Seq[String])
 
-object ErrorResponse {
-  implicit val writes = Json.writes[ErrorResponse]
-
-  implicit class ErrorResponseOps(err: ErrorResponse) {
-    def toJson: JsValue = Json.toJson(err)
-  }
-}
-
 object ErrorCode extends Enumeration {
   type ErrorCode = Value
 
@@ -27,7 +19,5 @@ object ErrorCode extends Enumeration {
     }
   }
 
-  implicit val enumReads: Reads[ErrorCode] = EnumerationHelpers.enumReads(ErrorCode)
-  implicit val enumWrites: Writes[ErrorCode] = EnumerationHelpers.enumWrites
 }
 
