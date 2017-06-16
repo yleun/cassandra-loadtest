@@ -15,7 +15,7 @@ class JsonProtocol {
   sdf.setTimeZone(TimeZone.getTimeZone("UTC"))
 
   implicit lazy val dateFormat: Format[Date] = new Format[Date] {
-    override def reads(json: JsValue): JsResult[Date] = json.validate[String].map(sdf.parse)
+    override def reads(json: JsValue): JsResult[Date] = json.validate[String].filter(_.nonEmpty).map(sdf.parse)
 
     override def writes(o: Date): JsValue = JsString(sdf.format(o))
   }

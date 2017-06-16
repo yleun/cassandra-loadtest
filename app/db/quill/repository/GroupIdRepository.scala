@@ -8,9 +8,6 @@ import db.model.GroupId
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-/**
-  * Created by yleung on 2017-05-26.
-  */
 trait GroupIdRepo {
 
   def findByGroupId(groupId: UUID): Future[List[GroupId]]

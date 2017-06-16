@@ -4,15 +4,17 @@ import java.util.UUID
 import javax.inject.Inject
 
 import akka.actor.ActorSystem
+import com.google.inject.Singleton
 import db.model.GroupId
-import dto.{ ErrorCode, ErrorResponse, GroupResponse }
+import dto.{ErrorCode, ErrorResponse, GroupResponse}
 import play.api.libs.json.{JsError, Json}
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, Controller, Results}
 import services.{GroupService, QuillGroupService}
 import db.model.JsonProtocol._
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class GroupController @Inject()(
   actorSystem: ActorSystem,
   service: GroupService,
@@ -22,18 +24,18 @@ class GroupController @Inject()(
   val created = Json.obj("status" -> "created")
 
   def getGroup(groupId: UUID) = Action.async { implicit req =>
-      service.listGroups(groupId)
-        .map {
-          case Right(a) =>
-            Ok(Json.toJson(GroupResponse(groupId, a)))
-          case Left(e) =>
-            ServiceUnavailable(
-              ErrorResponse(
-                ErrorCode.DBServiceNotAvailable,
-                List(ErrorCode.LookupMsgs(ErrorCode.DBServiceNotAvailable) + " " + e.toString)
-              ).asJValue()
-            )
-        }
+    service.listGroups(groupId)
+      .map {
+        case Right(a) =>
+          Ok(GroupResponse(groupId, a).asJValue())
+        case Left(e) =>
+          Results.BadRequest(
+            ErrorResponse(
+              ErrorCode.DBServiceNotAvailable,
+              List(ErrorCode.LookupMsgs(ErrorCode.DBServiceNotAvailable) + " " + e.toString)
+            ).asJValue()
+          )
+      }
   }
 
   def saveGroup(groupId: UUID) = Action.async(parse.json) { request =>
@@ -53,7 +55,7 @@ class GroupController @Inject()(
         .map {
           case Right(_) => Created(created)
           case Left(e) =>
-            ServiceUnavailable(
+            Results.BadRequest(
               ErrorResponse(
                 ErrorCode.ServiceError,
                 List(ErrorCode.LookupMsgs(ErrorCode.DBServiceNotAvailable) + " " + e.toString)

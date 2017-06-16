@@ -3,7 +3,7 @@ package services
 import scala.language.postfixOps
 import javax.inject._
 
-import com.outworkers.phantom.dsl.UUID
+import java.util.UUID
 import db.model.GroupId
 import db.quill.repository.GroupIdRepository
 

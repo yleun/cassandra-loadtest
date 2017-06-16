@@ -2,20 +2,30 @@ package db.phantom
 
 import java.util.UUID
 
-import com.outworkers.phantom.dsl.{ context => _, _ }
-import db.model.GroupId
+import com.outworkers.phantom.CassandraTable
+import com.outworkers.phantom.dsl._
+import org.joda.time.DateTime
 
 import scala.concurrent.Future
 
 abstract class GroupIdTable extends Table[GroupIdTable, GroupId] {
 
+  override def tableName: String = "group_id"
+
   // First the partition key, which is also a Primary key in Cassandra.
-  object id extends UUIDColumn with PartitionKey
+  object groupId extends UUIDColumn with PartitionKey {
+    override lazy val name = "group_id"
+  }
+
+  object id extends UUIDColumn with PrimaryKey {
+    override lazy val name = "id"
+  }
 
   // Only keyed fields can be queried on
-  object groupId extends UUIDColumn with PartitionKey
 
-  object createTs extends DateColumn with ClusteringOrder
+  object createTs extends DateColumn with PrimaryKey {
+    override lazy val name = "create_ts"
+  }
 
   def findByGroupId(groupId: UUID): Future[List[GroupId]] =
     select
@@ -29,15 +39,6 @@ abstract class GroupIdTable extends Table[GroupIdTable, GroupId] {
       .and(_.id eqs id)
       .consistencyLevel_=(ConsistencyLevel.ONE)
       .one()
-
-  def save(groupId: GroupId): Future[ResultSet] = {
-    insert
-      .value(_.id, groupId.id)
-      .value(_.groupId, groupId.groupId)
-      .value(_.createTs, groupId.createTs)
-      .consistencyLevel_=(ConsistencyLevel.ONE)
-      .future()
-  }
 
   def deleteById(groupId: UUID,  id: UUID): Future[ResultSet] =
     delete
