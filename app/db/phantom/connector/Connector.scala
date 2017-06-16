@@ -65,6 +65,6 @@ object Connector {
 
     ContactPoints(hosts)
       .withClusterBuilder(builder)
-      .keySpace(keyspace, autoinit = false)
+      .keySpace(keyspace, autoinit = true)
   }
 }

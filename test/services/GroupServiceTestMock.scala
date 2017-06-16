@@ -4,7 +4,7 @@ import java.time.ZonedDateTime
 import java.util.UUID
 
 import com.typesafe.config.ConfigFactory
-import db.phantom.model.{GroupId}
+import db.model.{GroupId}
 import db.phantom.repository.GroupIdRepository
 import org.joda.time.DateTime
 import org.mockito.Mockito._
@@ -27,7 +27,7 @@ class GroupServiceTestMock extends FunSuite with MockitoSugar with Matchers with
 
   val groupId = GroupId(
     id = xId,
-    createTs = xCreateTs,
+    createTs = xCreateTs.toDate,
     groupId = xGroupId
   )
 
@@ -36,7 +36,7 @@ class GroupServiceTestMock extends FunSuite with MockitoSugar with Matchers with
 
     when(mockGroupIdRepository.findByGroupId(xGroupId)) thenReturn Future(List(groupId))
 
-    val myGroupService = new GroupService(mockGroupIdRepository)
+    val myGroupService = GroupService(mockGroupIdRepository)
 
     val actual = Await.result(myGroupService.listGroups(xGroupId),10.seconds)
     actual.right.value should be (List(groupId))
@@ -49,7 +49,7 @@ class GroupServiceTestMock extends FunSuite with MockitoSugar with Matchers with
 
     when(mockGroupIdRepository.findByGroupId(xGroupId)) thenReturn Future.failed(repoError)
 
-    val myGroupService = new GroupService(mockGroupIdRepository)
+    val myGroupService = GroupService(mockGroupIdRepository)
 
     val actual = Await.result(myGroupService.listGroups(xGroupId),10.seconds)
     actual.left.value should be (RepositoryFailure(repoError))
@@ -60,7 +60,7 @@ class GroupServiceTestMock extends FunSuite with MockitoSugar with Matchers with
 
     when(mockGroupIdRepository.saveEntry(groupId)) thenReturn Future(true)
 
-    val myGroupService = new GroupService(mockGroupIdRepository)
+    val myGroupService = GroupService(mockGroupIdRepository)
 
     val actual = Await.result(myGroupService.insertGroup(groupId),10.seconds)
     actual.right.value should be (true)
@@ -73,7 +73,7 @@ class GroupServiceTestMock extends FunSuite with MockitoSugar with Matchers with
 
     when(mockGroupIdRepository.saveEntry(groupId)) thenReturn Future.failed(repoError)
 
-    val myGroupService = new GroupService(mockGroupIdRepository)
+    val myGroupService = GroupService(mockGroupIdRepository)
 
     val actual = Await.result(myGroupService.insertGroup(groupId),10.seconds)
     actual.left.value should be (RepositoryFailure(repoError))

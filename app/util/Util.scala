@@ -11,9 +11,12 @@ import org.joda.time.{DateTime, DateTimeZone}
 
 object Util {
 
-  val fmt: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(DateTimeZone.forID("UTC"))
-  val sdf: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-  sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+  val fmt = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    .withZone(DateTimeZone.forID("UTC"))
+
+  val sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+
+  sdf.setTimeZone(TimeZone.getTimeZone("UTC"))
 
   implicit def toZonedDateTime(d: DateTime): ZonedDateTime = {
     val cal = d.toGregorianCalendar
@@ -24,16 +27,6 @@ object Util {
   implicit def toDateTime(zdt: ZonedDateTime): DateTime =
     new DateTime(
       zdt.toInstant.toEpochMilli,
-      DateTimeZone.forTimeZone(TimeZone.getTimeZone(zdt.getZone)))
-
-  implicit def toString(dt: DateTime) =
-    fmt.print(dt)
-
-
-  implicit def toString(dt: Date) =
-    sdf.format(dt)
-
-  implicit def toDate(ds: String) =
-    sdf.parse(ds)
-
+      DateTimeZone.forTimeZone(TimeZone.getTimeZone(zdt.getZone))
+    )
 }

@@ -5,7 +5,7 @@ import javax.inject._
 
 import com.outworkers.phantom.dsl.UUID
 import com.typesafe.config.ConfigFactory
-import db.phantom.model.{GroupId}
+import db.model.{GroupId}
 import db.phantom.repository.GroupIdRepository
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -16,8 +16,6 @@ case class RepositoryFailure(ex: Throwable) extends ServiceError
 case object GroupIdNotFound extends ServiceError
 
 case class GroupService @Inject()(groupRepo: GroupIdRepository)(implicit val ec: ExecutionContext) {
-  private val config = ConfigFactory.load()
-
   private def toSuccess[A](a: A): Either[ServiceError, A] = Right(a)
 
   private def toRepoFailure[A]: PartialFunction[Throwable, Either[ServiceError, A]] = {

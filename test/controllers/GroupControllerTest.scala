@@ -1,24 +1,24 @@
 package controllers
 
-import scala.language.postfixOps
-import java.util.{Date, Locale, UUID}
+import java.util.UUID
 
 import akka.actor.ActorSystem
-import org.joda.time.{DateTime, DateTimeZone}
+import db.model.GroupId
+import db.model.JsonProtocol._
+import org.joda.time.DateTime
 import org.mockito.Mockito.when
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.i18n.Lang
 import play.api.libs.json.Json
 import play.api.mvc.{Result, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services._
-import util.Util
-import db.phantom.model.GroupId
+import com.outworkers.util.samplers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.language.postfixOps
 
 class GroupControllerTest extends PlaySpec with MockitoSugar with Results {
 
@@ -33,7 +33,7 @@ class GroupControllerTest extends PlaySpec with MockitoSugar with Results {
 
       val groupId = UUID.randomUUID
       val id = UUID.randomUUID
-      val createTs = new DateTime(2016, 5, 6, 1, 1, 1)
+      val createTs = new DateTime(2016, 5, 6, 1, 1, 1).toDate
 
       val groupIdObj = GroupId(
         groupId = groupId,
@@ -55,13 +55,7 @@ class GroupControllerTest extends PlaySpec with MockitoSugar with Results {
 
       bodyJson mustBe Json.obj(
         "groupId" -> groupId,
-        "ids" -> Json.arr(
-          Json.obj(
-            "groupId" -> groupId,
-            "id" -> id,
-            "createTs" -> Util.toString(createTs)
-          )
-        )
+        "ids" -> Json.arr(Json.toJson(groupIdObj))
       )
     }
 
@@ -116,15 +110,7 @@ class GroupControllerTest extends PlaySpec with MockitoSugar with Results {
 
   "update in Controller" should {
 
-    val groupId = UUID.randomUUID
-    val id = UUID.randomUUID
-    val createTs = new DateTime(2016, 5, 6, 1, 1, 1).withZone(DateTimeZone.forID("UTC"))
-
-    val groupIdObj = GroupId(
-      groupId = groupId,
-      id = id,
-      createTs = createTs
-    )
+    val groupIdObj = gen[GroupId]
 
     "return Created when an entry is added" in {
       val mockGroupService = mock[GroupService]
@@ -133,18 +119,13 @@ class GroupControllerTest extends PlaySpec with MockitoSugar with Results {
       when(mockGroupService.insertGroup(groupIdObj)).thenReturn(createGoodEffect(true))
 
       val GroupController = new GroupController(ActorSystem(), mockGroupService, mockQuillGroupService)
-      val request = FakeRequest(POST, "/groups/" + groupId + "/ids")
+      val request = FakeRequest(POST, "/groups/" + groupIdObj.groupId + "/ids")
         .withHeaders("Host" -> "localhost")
-        .withBody(
-          Json.obj(
-            "groupId" -> groupId,
-            "id" -> id,
-            "createTs" -> Util.toString(createTs)
-            )
-          )
-      val actual: Future[Result] = GroupController.saveGroup(groupId)(request)
+        .withBody(groupIdObj.asJValue())
+      val actual: Future[Result] = GroupController.saveGroup(groupIdObj.groupId)(request)
       val bodyJson = contentAsJson(actual)
       val statusCode = status(actual)
+      Console.println(bodyJson)
 
       statusCode mustBe CREATED
 
@@ -160,18 +141,15 @@ class GroupControllerTest extends PlaySpec with MockitoSugar with Results {
       when(mockGroupService.insertGroup(groupIdObj)).thenReturn(createBadEffect(RepositoryFailure(new Exception("bad"))))
 
       val GroupController = new GroupController(ActorSystem(), mockGroupService, mockQuillGroupService)
-      val request = FakeRequest(POST, "/groups/" + groupId + "/ids")
+      val request = FakeRequest(POST, "/groups/" + groupIdObj.groupId + "/ids")
         .withHeaders("Host" -> "localhost")
-        .withBody(
-          Json.obj(
-            "groupId" -> groupId,
-            "id" -> id,
-            "createTs" -> Util.toString(createTs))
-        )
-      val actual: Future[Result] = GroupController.saveGroup(groupId)(request)
+        .withBody(groupIdObj.asJValue())
+
+      val actual: Future[Result] = GroupController.saveGroup(groupIdObj.groupId)(request)
       val bodyJson = contentAsJson(actual)
       val statusCode = status(actual)
 
+      Console.println(bodyJson)
       statusCode mustBe SERVICE_UNAVAILABLE
 
       bodyJson mustBe Json.obj(

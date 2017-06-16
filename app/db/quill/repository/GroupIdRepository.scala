@@ -1,14 +1,12 @@
 package db.quill.repository
 
 import java.util.UUID
-import java.util.Date
 import javax.inject.Inject
 
-import db.quill.model.{GroupId}
+import db.model.GroupId
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
-
+import scala.concurrent.Future
 
 /**
   * Created by yleung on 2017-05-26.
@@ -54,22 +52,6 @@ class GroupIdRepository @Inject()(quillContext: QuillContext) {
     ctx.run(q).map(_.headOption)
   }
 
-  /*
-    * Find the group entry by id. Only used for rollback.
-    *
-    * @param groupId
-    * @param id
-    * @return
-  *         */
-  private def findByGroupId(groupId: UUID, id: UUID): Future[Option[GroupId]] = {
-    println("GET: going to QUILL")
-    val q = quote {
-      query[GroupId]
-        .filter(_.groupId == lift(groupId))
-        .filter(_.id == lift(id))
-    }
-    ctx.run(q).map(_.headOption)
-  }
 
   /*
     * Save a group by finding the id first
@@ -81,12 +63,8 @@ class GroupIdRepository @Inject()(quillContext: QuillContext) {
     println("POST: going to QUILL")
     findById(ae.groupId, ae.id)
       .flatMap {
-        case Some(x) => {
-          save(ae, false)
-        }
-        case None => {
-          save(ae, true)
-        }
+        case Some(x) => save(ae, isNew = false)
+        case None => save(ae, isNew = true)
       }
   }
 
